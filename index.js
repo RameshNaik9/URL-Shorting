@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 // Serve the static files from the React app
-// app.use(express.static(path.join(__dirname, 'url-shortening-frontend/build')));
+// app.use(express.static(path.join(__dirname, 'client/build')));
 
 
 const databaseUrl = process.env.MONGODB_URI;
@@ -55,7 +55,7 @@ app.get('/:shortId', async (req, res) => {
 });
 
 // app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname + '/url-shortening-frontend/build/index.html'));
+//   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 // });
 
 

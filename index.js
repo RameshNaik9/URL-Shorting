@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 8001;
 
 // Serve the static files from the React app
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static("./client/build"));
 
 
 const databaseUrl = process.env.MONGODB_URI;
@@ -57,7 +57,7 @@ app.get('/:shortId', async (req, res) => {
 
 // Serve the React app for any other routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build/index.html'));
+  res.sendFile(path.resolve(__dirname, "client","build","index.html"));
 });
 
 

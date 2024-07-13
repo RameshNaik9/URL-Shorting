@@ -4,16 +4,17 @@ import './App.css';
 import axios from 'axios';
 import Footer from './components/Footer'; 
 import favicon from './favicon.ico'; 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function App() {
   const [, setUrls] = useState([]);
 
   const fetchUrls = async () => {
     try {
-      const response = await axios.get('http://localhost:8001/url'); 
+      const response = await axios.get(`${API_BASE_URL}/url`); 
       const formattedUrls = response.data.map(url => ({
         originalUrl: url.redirectURL,
-        shortUrl: `http://localhost:8001/${url.shortId}`,
+        shortUrl: `${API_BASE_URL}/${url.shortId}`,
       }));
       setUrls(formattedUrls);
     } catch (error) {

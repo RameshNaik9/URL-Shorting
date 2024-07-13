@@ -1,44 +1,57 @@
-const express = require ("express");
-const {connectToMongoDB} =require("./connect");
-const urlRoute = require('./routes/url');
-const URL = require('./models/url');
+const express = require('express');
+const cors = require('cors'); // Import cors
+const { connectToMongoDB } = require('./connect');
+const urlRoutes = require('./routes/urlRoutes');
+const URL = require('./models/urlModel');
+const logger = require('./utils/logger');
+const morgan = require('morgan');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT ;
+const PORT = process.env.PORT;
 
-const databaseUrl = process.env.MONGODB_URI ;
+const databaseUrl = process.env.MONGODB_URI;
 connectToMongoDB(databaseUrl)
-    .then(() => console.log("Mongodb connected"))
-    .catch((error) => console.error("Failed to connect to MongoDB", error));
+  .then(() => logger.info('MongoDB connected'))
+  .catch((error) => logger.error('Failed to connect to MongoDB', error));
 
-
+// Use CORS to allow cross-origin requests
+app.use(cors());
+app.use(morgan('combined'));
 app.use(express.json());
-app.use("/url" , urlRoute);
+app.use('/url', urlRoutes);
+
 app.get('/:shortId', async (req, res) => {
   const { shortId } = req.params;
-  const entry = await URL.findOneAndUpdate(
-    { shortId },
-    {
-      $inc: { visitCount: 1 },
-      $push: {
-        visitHistory: {
-          timestamp: Date.now(),
+  try {
+    const entry = await URL.findOneAndUpdate(
+      { shortId },
+      {
+        $inc: { visitCount: 1 },
+        $push: {
+          visitHistory: {
+            timestamp: Date.now(),
+          },
         },
       },
-    },
-    { new: true }
-  );
+      { new: true }
+    );
 
-  if (entry) {
-    res.redirect(entry.redirectURL);
-  } else {
-    res.status(404).send('URL not found');
+    if (entry) {
+      logger.info(`Redirecting to ${entry.redirectURL}`);
+      res.redirect(entry.redirectURL);
+    } else {
+      logger.warn(`URL not found for shortId: ${shortId}`);
+      res.status(404).json({ error: 'URL not found' });
+    }
+  } catch (error) {
+    logger.error('Error processing request', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
+app.listen(PORT, () => logger.info(`Server started at PORT: ${PORT}`));
 
-app.listen(PORT,()=> console.log(`Server Started at PORT:${PORT}`));
-app.get('/',(req,res)=>{
-    res.send('hello')
+app.get('/', (req, res) => {
+  res.send('hello');
 });

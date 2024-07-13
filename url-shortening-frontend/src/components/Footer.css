@@ -1,0 +1,23 @@
+/* Reset styles for the footer */
+.footer,
+.footer * {
+    all: unset;
+    box-sizing: border-box;
+}
+
+.footer {
+    background-color: #282c34;
+    padding: 10px 0;
+    /* Small height */
+    width: 100%;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.footer-content p {
+    margin: 0;
+    font-size: 14px;
+}

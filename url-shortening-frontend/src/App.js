@@ -14,6 +14,7 @@ function App() {
       const formattedUrls = response.data.map(url => ({
         originalUrl: url.redirectURL,
         shortUrl: `http://localhost:8001/${url.shortId}`,
+        visitCount: url.visitHistory ? url.visitHistory.length : 0,
       }));
       setUrls(formattedUrls);
     } catch (error) {

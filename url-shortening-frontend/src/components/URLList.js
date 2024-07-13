@@ -20,12 +20,18 @@ function URLList({ urls, onRefresh }) {
         <tbody>
           {urls.slice().reverse().map((url, index) => (
             <tr key={index}>
-              <td>{url.originalUrl}</td>
+              {/* <td>{url.originalUrl}</td> */}
+              <td>
+                <a href={url.originalUrl} target="_blank" rel="noopener noreferrer">
+                  {url.originalUrl}
+                </a>
+              </td>
               <td>
                 <a href={url.shortUrl} target="_blank" rel="noopener noreferrer">
                   {url.shortUrl}
                 </a>
               </td>
+              {/* <td>{url.shortUrl}</td> */}
               <td>
                 <a className="buttona" href={url.shortUrl} target="_blank" rel="noopener noreferrer">
                   Go to Link

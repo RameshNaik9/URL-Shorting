@@ -10,6 +10,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT;
 
+// Serve the static files from the React app
+// app.use(express.static(path.join(__dirname, 'url-shortening-frontend/build')));
+
+
 const databaseUrl = process.env.MONGODB_URI;
 connectToMongoDB(databaseUrl)
   .then(() => logger.info('MongoDB connected'))
@@ -49,6 +53,11 @@ app.get('/:shortId', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname + '/url-shortening-frontend/build/index.html'));
+// });
+
 
 app.listen(PORT, () => logger.info(`Server started at PORT: ${PORT}`));
 

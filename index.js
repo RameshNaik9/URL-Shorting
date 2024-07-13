@@ -1,5 +1,6 @@
 const express = require('express');
-const cors = require('cors'); // Import cors
+const cors = require('cors');
+const path = require('path');
 const { connectToMongoDB } = require('./connect');
 const urlRoutes = require('./routes/urlRoutes');
 const URL = require('./models/urlModel');
@@ -8,10 +9,10 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8001;
 
 // Serve the static files from the React app
-// app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 
 const databaseUrl = process.env.MONGODB_URI;
@@ -54,9 +55,10 @@ app.get('/:shortId', async (req, res) => {
   }
 });
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname + '/client/build/index.html'));
-// });
+// Serve the React app for any other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'));
+});
 
 
 app.listen(PORT, () => logger.info(`Server started at PORT: ${PORT}`));
